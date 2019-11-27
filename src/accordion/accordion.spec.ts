@@ -75,8 +75,7 @@ describe('ngb-accordion', () => {
     const el = fixture.nativeElement;
     fixture.detectChanges();
     expectOpenPanels(el, [false, false, false]);
-    expect(accordionEl.getAttribute('role')).toBe('tablist');
-    expect(accordionEl.getAttribute('aria-multiselectable')).toBe('true');
+    expect(accordionEl.getAttribute('role')).toBe('presentation');
   });
 
   it('should have proper css classes', () => {
@@ -166,7 +165,7 @@ describe('ngb-accordion', () => {
 
     tc.closeOthers = true;
     fixture.detectChanges();
-    expect(el.children[0].getAttribute('aria-multiselectable')).toBe('false');
+    expectOpenPanels(el, [false, false, false]);
 
     getButton(el, 0).click();
     fixture.detectChanges();
@@ -486,11 +485,13 @@ describe('ngb-accordion', () => {
     const headingLinks = getPanelsTitle(fixture.nativeElement);
     expectOpenPanels(fixture.nativeElement, [true, false, false]);
     expect(headingLinks[0].disabled).toBeFalsy();
+    expect(headingLinks[0].getAttribute('aria-disabled')).toBe('false');
 
     tc.panels[0].disabled = true;
     fixture.detectChanges();
     expectOpenPanels(fixture.nativeElement, [false, false, false]);
     expect(headingLinks[0].disabled).toBeTruthy();
+    expect(headingLinks[0].getAttribute('aria-disabled')).toBe('true');
   });
 
   it('should remove collapsed panels content from DOM', () => {
@@ -606,10 +607,42 @@ describe('ngb-accordion', () => {
     fixture.detectChanges();
 
     const headers = getPanels(fixture.nativeElement);
-    headers.forEach((header: HTMLElement) => expect(header.getAttribute('role')).toBe('tab'));
+    headers.forEach((header: HTMLElement) => expect(header.getAttribute('role')).toBe('heading'));
 
     const contents = getPanelsContent(fixture.nativeElement);
-    contents.forEach((content: HTMLElement) => expect(content.getAttribute('role')).toBe('tabpanel'));
+    contents.forEach((content: HTMLElement) => expect(content.getAttribute('role')).toBe('region'));
+  });
+
+  it('should set aria-level of headers to 3 by default', () => {
+    const testHtml = `
+    <ngb-accordion>
+     <ngb-panel>
+       <ng-template ngbPanelHeader let-opened="opened"></ng-template>
+     </ngb-panel>
+    </ngb-accordion>
+    `;
+    const fixture = createTestComponent(testHtml);
+
+    fixture.detectChanges();
+
+    let el = fixture.nativeElement.querySelector('[role="heading"]');
+    expect(el.getAttribute('aria-level')).toBe('3');
+  });
+
+  it('should accept aria-level property to headers', () => {
+    const testHtml = `
+    <ngb-accordion>
+     <ngb-panel>
+       <ng-template ngbPanelHeader [ariaLevel]="5" let-opened="opened"></ng-template>
+     </ngb-panel>
+    </ngb-accordion>
+    `;
+    const fixture = createTestComponent(testHtml);
+
+    fixture.detectChanges();
+
+    let el = fixture.nativeElement.querySelector('[role="heading"]');
+    expect(el.getAttribute('aria-level')).toBe('5');
   });
 
   describe('Custom config', () => {

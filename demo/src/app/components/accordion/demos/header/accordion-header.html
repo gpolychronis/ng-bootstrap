@@ -1,8 +1,9 @@
+<div class="h3" role="heading" aria-level="3">Heading level 3</div>
 <ngb-accordion #a="ngbAccordion" activeIds="custom-panel-1">
   <ngb-panel id="custom-panel-1">
-    <ng-template ngbPanelHeader let-opened="opened">
+    <ng-template ngbPanelHeader [ariaLevel]="4" let-opened="opened">
       <div class="d-flex align-items-center justify-content-between">
-        <h5 class="m-0">First panel - {{ opened ? 'opened' : 'collapsed' }}</h5>
+        <div class="h5 m-0">First panel - {{ opened ? 'opened' : 'collapsed' }}</div>
         <button ngbPanelToggle class="btn btn-link p-0">Toggle first</button>
       </div>
     </ng-template>
@@ -16,9 +17,9 @@
     </ng-template>
   </ngb-panel>
   <ngb-panel>
-    <ng-template ngbPanelHeader>
+    <ng-template ngbPanelHeader [ariaLevel]="4">
       <div class="d-flex align-items-center justify-content-between">
-        <h5 class="m-0">Second panel</h5>
+        <div class="h5 m-0">Second panel</div>
         <div>
           <button ngbPanelToggle class="btn btn-sm btn-outline-primary ml-2">Toggle second</button>
           <button type="button" class="btn btn-sm btn-outline-secondary ml-2" (click)="disabled = !disabled">
@@ -38,7 +39,7 @@
     </ng-template>
   </ngb-panel>
   <ngb-panel [disabled]="disabled">
-    <ng-template ngbPanelHeader>
+    <ng-template ngbPanelHeader [ariaLevel]="4">
       <div class="d-flex align-items-center justify-content-between">
         <button ngbPanelToggle class="btn btn-link container-fluid text-left pl-0">Third panel</button>
         <p *ngIf="disabled" class="text-muted m-0 small">[I'm&nbsp;disabled]</p>

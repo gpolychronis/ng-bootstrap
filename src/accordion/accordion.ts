@@ -41,6 +41,11 @@ export interface NgbPanelHeaderContext {
  */
 @Directive({selector: 'ng-template[ngbPanelHeader]'})
 export class NgbPanelHeader {
+  /**
+   * The aria-level value of the header. By default is 3.
+   */
+  @Input() ariaLevel: number;
+
   constructor(public templateRef: TemplateRef<any>) {}
 }
 
@@ -146,7 +151,7 @@ export interface NgbPanelChangeEvent {
 @Component({
   selector: 'ngb-accordion',
   exportAs: 'ngbAccordion',
-  host: {'class': 'accordion', 'role': 'tablist', '[attr.aria-multiselectable]': '!closeOtherPanels'},
+  host: {'class': 'accordion', 'role': 'presentation'},
   template: `
     <ng-template #t ngbPanelHeader let-panel>
       <button class="btn btn-link" [ngbPanelToggle]="panel">
@@ -155,11 +160,11 @@ export interface NgbPanelChangeEvent {
     </ng-template>
     <ng-template ngFor let-panel [ngForOf]="panels">
       <div class="card">
-        <div role="tab" id="{{panel.id}}-header" [class]="'card-header ' + (panel.type ? 'bg-'+panel.type: type ? 'bg-'+type : '')">
+        <div role="heading" [attr.aria-level]="panel.headerTpl?.ariaLevel || 3" id="{{panel.id}}-header" [class]="'card-header ' + (panel.type ? 'bg-'+panel.type: type ? 'bg-'+type : '')">
           <ng-template [ngTemplateOutlet]="panel.headerTpl?.templateRef || t"
                        [ngTemplateOutletContext]="{$implicit: panel, opened: panel.isOpen}"></ng-template>
         </div>
-        <div id="{{panel.id}}" role="tabpanel" [attr.aria-labelledby]="panel.id + '-header'"
+        <div id="{{panel.id}}" role="region" [attr.aria-labelledby]="panel.id + '-header'"
              class="collapse" [class.show]="panel.isOpen" *ngIf="!destroyOnHide || panel.isOpen">
           <div class="card-body">
                <ng-template [ngTemplateOutlet]="panel.contentTpl?.templateRef"></ng-template>
@@ -328,6 +333,7 @@ export class NgbAccordion implements AfterContentChecked {
     '[disabled]': 'panel.disabled',
     '[class.collapsed]': '!panel.isOpen',
     '[attr.aria-expanded]': 'panel.isOpen',
+    '[attr.aria-disabled]': 'panel.disabled',
     '[attr.aria-controls]': 'panel.id',
     '(click)': 'accordion.toggle(panel.id)'
   }
