@@ -754,7 +754,7 @@ describe('ngb-typeahead', () => {
       fixture.detectChanges();
 
       expect(input.getAttribute('role')).toBe('combobox');
-      expect(input.getAttribute('aria-multiline')).toBe('false');
+      expect(input.getAttribute('aria-multiline')).toBeNull();
       expect(input.getAttribute('aria-autocomplete')).toBe('list');
       expect(input.getAttribute('aria-expanded')).toBe('false');
       expect(input.getAttribute('aria-owns')).toBeNull();
