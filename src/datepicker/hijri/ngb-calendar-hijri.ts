@@ -31,16 +31,18 @@ export abstract class NgbCalendarHijri extends NgbCalendar {
 
   getNext(date: NgbDate, period: NgbPeriod = 'd', number = 1) {
     date = new NgbDate(date.year, date.month, date.day);
+    let days;
 
     switch (period) {
       case 'y':
         date = this._setYear(date, date.year + number);
-        date.month = 1;
-        date.day = 1;
+        days = this.getDaysPerMonth(date.month, date.year);
+        date.day = date.day <= days ? date.day : days;
         return date;
       case 'm':
         date = this._setMonth(date, date.month + number);
-        date.day = 1;
+        days = this.getDaysPerMonth(date.month, date.year);
+        date.day = date.day <= days ? date.day : days;
         return date;
       case 'd':
         return this._setDay(date, date.day + number);

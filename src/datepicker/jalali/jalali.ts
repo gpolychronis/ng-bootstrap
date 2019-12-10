@@ -213,7 +213,7 @@ function jalaliToJulian(jYear: number, jMonth: number, jDay: number) {
 /**
  * Returns the number of days in a specific jalali month.
  */
-function getDaysPerMonth(month: number, year: number): number {
+export function getDaysPerMonth(month: number, year: number): number {
   if (month <= 6) {
     return 31;
   }

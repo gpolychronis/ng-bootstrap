@@ -3,7 +3,7 @@ import {NgbDate} from '../ngb-date';
 import {NgbCalendar, NgbPeriod} from '../ngb-calendar';
 import {isInteger} from '../../util/util';
 
-import {fromGregorian, setJalaliDay, setJalaliMonth, setJalaliYear, toGregorian} from './jalali';
+import {fromGregorian, setJalaliDay, setJalaliMonth, setJalaliYear, toGregorian, getDaysPerMonth} from './jalali';
 
 @Injectable()
 export class NgbCalendarPersian extends NgbCalendar {
@@ -15,16 +15,18 @@ export class NgbCalendarPersian extends NgbCalendar {
 
   getNext(date: NgbDate, period: NgbPeriod = 'd', number = 1) {
     date = new NgbDate(date.year, date.month, date.day);
+    let days;
 
     switch (period) {
       case 'y':
         date = setJalaliYear(date, date.year + number);
-        date.month = 1;
-        date.day = 1;
+        days = getDaysPerMonth(date.month, date.year);
+        date.day = date.day <= days ? date.day : days;
         return date;
       case 'm':
         date = setJalaliMonth(date, date.month + number);
-        date.day = 1;
+        days = getDaysPerMonth(date.month, date.year);
+        date.day = date.day <= days ? date.day : days;
         return date;
       case 'd':
         return setJalaliDay(date, date.day + number);
